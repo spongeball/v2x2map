@@ -176,7 +176,7 @@ class FrameLogAdapter(
         val detail = when (entry.msgType) {
             ItsG5Decoder.MsgType.CAM -> buildString {
                 if (f != null) {
-                    f.speedMps?.takeIf { it > 0.5 }?.let { append("%.0f km/h ".format(it * 3.6)) }
+                    f.speedMps?.takeIf { it > 0.5 }?.let { append(Units.formatSpeedMps(context, it)); append(' ') }
                     f.headingDeg?.let {
                         val card = arrayOf("N","NE","E","SE","S","SW","W","NW")
                         append(card[((it / 45.0 + 0.5).toInt() % 8).coerceIn(0,7)])
@@ -207,11 +207,7 @@ class FrameLogAdapter(
         val result = FloatArray(1)
         Location.distanceBetween(userLoc.latitude, userLoc.longitude,
                                  latLon.first, latLon.second, result)
-        return when {
-            result[0] < 1000  -> "%.0f m".format(result[0])
-            result[0] < 10000 -> "%.1f km".format(result[0] / 1000)
-            else               -> "%.0f km".format(result[0] / 1000)
-        }
+        return Units.formatDistanceMeters(context, result[0])
     }
 
     // ── expanded frame row ───────────────────────────────────────────────────

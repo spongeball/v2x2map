@@ -1,10 +1,8 @@
 package org.opentrafficmap.receiver
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.material.textfield.TextInputEditText
@@ -13,12 +11,15 @@ import org.opentrafficmap.receiver.databinding.ActivitySettingsBinding
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
+    private var defaultRecordTint: android.content.res.ColorStateList? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AppTheme.applyTo(this)
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.toolbar.setNavigationOnClickListener { finish() }
+        defaultRecordTint = binding.btnRecord.backgroundTintList
 
         // --- Keep screen on -------------------------------------------------
         binding.swKeepScreenOn.isChecked = Prefs.keepScreenOn(this)
@@ -37,6 +38,45 @@ class SettingsActivity : AppCompatActivity() {
                 else   AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
             )
             recreate()
+        }
+
+        // --- Theme color ------------------------------------------------------
+        val themeButtonId = when (Prefs.themeMode(this)) {
+            Prefs.ThemeMode.DEFAULT   -> R.id.rbThemeDefault
+            Prefs.ThemeMode.WALLPAPER -> R.id.rbThemeWallpaper
+            Prefs.ThemeMode.CUSTOM    -> R.id.rbThemeCustom
+        }
+        binding.rgThemeMode.check(themeButtonId)
+        binding.themeSwatches.visibility = if (Prefs.themeMode(this) == Prefs.ThemeMode.CUSTOM)
+            android.view.View.VISIBLE else android.view.View.GONE
+        buildThemeSwatches()
+        binding.rgThemeMode.setOnCheckedChangeListener { _, checkedId ->
+            val mode = when (checkedId) {
+                R.id.rbThemeWallpaper -> Prefs.ThemeMode.WALLPAPER
+                R.id.rbThemeCustom    -> Prefs.ThemeMode.CUSTOM
+                else                   -> Prefs.ThemeMode.DEFAULT
+            }
+            Prefs.setThemeMode(this, mode)
+            binding.themeSwatches.visibility = if (mode == Prefs.ThemeMode.CUSTOM)
+                android.view.View.VISIBLE else android.view.View.GONE
+            SettingsBus.themeChanged()
+            recreate()
+        }
+
+        // --- Units ------------------------------------------------------------
+        val unitsButtonId = when (Prefs.unitsMode(this)) {
+            Prefs.UnitsMode.METRIC   -> R.id.rbUnitsMetric
+            Prefs.UnitsMode.IMPERIAL -> R.id.rbUnitsImperial
+            Prefs.UnitsMode.AUTO     -> R.id.rbUnitsAuto
+        }
+        binding.rgUnits.check(unitsButtonId)
+        binding.rgUnits.setOnCheckedChangeListener { _, checkedId ->
+            val mode = when (checkedId) {
+                R.id.rbUnitsMetric   -> Prefs.UnitsMode.METRIC
+                R.id.rbUnitsImperial -> Prefs.UnitsMode.IMPERIAL
+                else                  -> Prefs.UnitsMode.AUTO
+            }
+            Prefs.setUnitsMode(this, mode)
         }
 
         // --- Reset ----------------------------------------------------------
@@ -83,11 +123,19 @@ class SettingsActivity : AppCompatActivity() {
         binding.btnMqttFilter.setOnClickListener { showMqttFilterDialog() }
 
         // --- Recording ------------------------------------------------------
+        binding.swAutoRecord.isChecked = Prefs.autoRecording(this)
+        binding.swAutoRecord.setOnCheckedChangeListener { _, c -> Prefs.setAutoRecording(this, c) }
         renderRecordingState()
         binding.btnRecord.setOnClickListener {
             val msg = SettingsBus.recordingToggle()
             Toast.makeText(this, msg ?: getString(R.string.rec_status_idle), Toast.LENGTH_LONG).show()
             renderRecordingState()
+        }
+        binding.btnOpenRecordingsFolder.setOnClickListener { openRecordingsFolder() }
+        binding.btnExportKml.setOnClickListener {
+            val f = SettingsBus.exportKml()
+            Toast.makeText(this, if (f != null) getString(R.string.kml_exported, f.absolutePath)
+                else getString(R.string.kml_export_failed), Toast.LENGTH_LONG).show()
         }
 
         // --- Marker / path TTL ----------------------------------------------
@@ -99,11 +147,33 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
+        // --- Marker size ------------------------------------------------------
+        val markerSizeButtonId = when (Prefs.markerSize(this)) {
+            Prefs.MarkerSize.SMALL  -> R.id.rbMarkerSmall
+            Prefs.MarkerSize.NORMAL -> R.id.rbMarkerNormal
+            Prefs.MarkerSize.LARGE  -> R.id.rbMarkerLarge
+        }
+        binding.rgMarkerSize.check(markerSizeButtonId)
+        binding.rgMarkerSize.setOnCheckedChangeListener { _, checkedId ->
+            Prefs.setMarkerSize(this, when (checkedId) {
+                R.id.rbMarkerSmall -> Prefs.MarkerSize.SMALL
+                R.id.rbMarkerLarge -> Prefs.MarkerSize.LARGE
+                else                 -> Prefs.MarkerSize.NORMAL
+            })
+        }
+
         // --- Own track ------------------------------------------------------
         binding.swOwnTrack.isChecked = Prefs.ownTrackEnabled(this)
         binding.swOwnTrack.setOnCheckedChangeListener { _, c ->
             Prefs.setOwnTrackEnabled(this, c)
             SettingsBus.ownTrackChanged(c)
+        }
+
+        // --- High Rate Mode ---------------------------------------------------
+        binding.swHighRate.isChecked = Prefs.highRateMode(this)
+        binding.swHighRate.setOnCheckedChangeListener { _, c ->
+            Prefs.setHighRateMode(this, c)
+            SettingsBus.highRateChanged(c)
         }
 
         // --- BLE coex -------------------------------------------------------
@@ -116,9 +186,6 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        // --- About / GitHub -------------------------------------------------
-        binding.btnAbout.setOnClickListener { startActivity(Intent(this, AboutActivity::class.java)) }
-        binding.btnGithub.setOnClickListener { openUrl(getString(R.string.github_url)) }
     }
 
     override fun onPause() {
@@ -171,46 +238,72 @@ class SettingsActivity : AppCompatActivity() {
     // ── MQTT filter dialog ───────────────────────────────────────────────────
 
     private fun showMqttFilterDialog() {
-        val allTypes = ItsG5Decoder.MsgType.values()
-        val allowed  = Prefs.mqttFilterTypes(this)
-        val checked  = allTypes.map { it.name in allowed }.toBooleanArray()
-        AlertDialog.Builder(this)
-            .setTitle(R.string.mqtt_filter_btn)
-            .setMultiChoiceItems(allTypes.map { mqttTypeLabel(it) }.toTypedArray(), checked) { _, i, on ->
-                checked[i] = on
-            }
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                val newFilter = allTypes.filterIndexed { i, _ -> checked[i] }.map { it.name }.toSet()
-                Prefs.setMqttFilterTypes(this, newFilter)
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+        TypeFilterDialog.show(this, R.string.mqtt_filter_btn, Prefs.mqttFilterTypes(this)) { newFilter ->
+            Prefs.setMqttFilterTypes(this, newFilter)
+        }
     }
 
     // ── helpers ──────────────────────────────────────────────────────────────
 
     private fun renderRecordingState() {
         val rec = SettingsBus.recorder()
-        binding.btnRecord.text = getString(if (rec?.isRecording == true) R.string.rec_on else R.string.rec_off)
-        binding.recStatus.text = if (rec?.isRecording == true)
-            getString(R.string.rec_status_active, rec.file?.absolutePath ?: "?", rec.frameCount)
+        val recording = rec?.isRecording == true
+        binding.btnRecord.text = getString(if (recording) R.string.rec_on else R.string.rec_off)
+        binding.btnRecord.backgroundTintList = if (recording)
+            android.content.res.ColorStateList.valueOf(StatusColors.RED) else defaultRecordTint
+        binding.recStatus.text = if (recording)
+            getString(R.string.rec_status_active, rec?.file?.absolutePath ?: "?", rec?.frameCount ?: 0)
         else getString(R.string.rec_status_idle)
     }
 
-    private fun mqttTypeLabel(type: ItsG5Decoder.MsgType): String = getString(when (type) {
-        ItsG5Decoder.MsgType.UNKNOWN -> R.string.msgtype_unknown
-        ItsG5Decoder.MsgType.CAM     -> R.string.msgtype_cam
-        ItsG5Decoder.MsgType.DENM    -> R.string.msgtype_denm
-        ItsG5Decoder.MsgType.MAPEM   -> R.string.msgtype_mapem
-        ItsG5Decoder.MsgType.SPATEM  -> R.string.msgtype_spatem
-        ItsG5Decoder.MsgType.IVIM    -> R.string.msgtype_ivim
-        ItsG5Decoder.MsgType.SREM    -> R.string.msgtype_srem
-        ItsG5Decoder.MsgType.SSEM    -> R.string.msgtype_ssem
-        ItsG5Decoder.MsgType.TLM     -> R.string.msgtype_tlm
-        ItsG5Decoder.MsgType.RTCMEM  -> R.string.msgtype_rtcmem
-    })
+    private fun openRecordingsFolder() {
+        val dir = getExternalFilesDir(null) ?: filesDir
+        val uri = androidx.core.content.FileProvider.getUriForFile(this, "$packageName.fileprovider", dir)
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(uri, "resource/folder")
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        try {
+            startActivity(intent)
+        } catch (_: Exception) {
+            Toast.makeText(this, getString(R.string.open_folder_failed), Toast.LENGTH_SHORT).show()
+        }
+    }
 
-    private fun openUrl(url: String) {
-        try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url))) } catch (_: Exception) {}
+    private fun buildThemeSwatches() {
+        binding.themeSwatches.removeAllViews()
+        val dp = resources.displayMetrics.density
+        val size = (40 * dp).toInt()
+        val current = Prefs.themeColor(this)
+        for (color in THEME_SWATCH_COLORS) {
+            val swatch = android.view.View(this).apply {
+                layoutParams = android.widget.LinearLayout.LayoutParams(size, size).apply {
+                    marginEnd = (8 * dp).toInt()
+                }
+                background = android.graphics.drawable.GradientDrawable().apply {
+                    shape = android.graphics.drawable.GradientDrawable.OVAL
+                    setColor(color)
+                    if (color == current) setStroke((3 * dp).toInt(), android.graphics.Color.WHITE)
+                }
+                setOnClickListener {
+                    Prefs.setThemeColor(this@SettingsActivity, color)
+                    buildThemeSwatches()
+                    SettingsBus.themeChanged()
+                    recreate()
+                }
+            }
+            binding.themeSwatches.addView(swatch)
+        }
+    }
+
+    companion object {
+        private val THEME_SWATCH_COLORS = listOf(
+            0xFF58A6FF.toInt(), // blue (accent)
+            0xFF7EE787.toInt(), // green (ok)
+            0xFFF0883E.toInt(), // orange (warn)
+            0xFFDA3633.toInt(), // red (danger)
+            0xFF9C6ADE.toInt(), // purple
+            0xFF2DD4BF.toInt(), // teal
+        )
     }
 }

@@ -19,7 +19,10 @@ object SettingsBus {
     fun interface OnKeepScreenOnChanged { fun call() }
     fun interface OnDarkModeChanged { fun call(on: Boolean) }
     fun interface OnOwnTrackChanged { fun call(on: Boolean) }
+    fun interface OnHighRateChanged { fun call(on: Boolean) }
     fun interface OnResetAll { fun call() }
+    fun interface OnExportKml { fun call(): java.io.File? }
+    fun interface OnThemeChanged { fun call() }
 
     var onFollowChanged: OnFollowChanged? = null
     var onMqttToggle:    OnMqttToggle?    = null
@@ -31,7 +34,10 @@ object SettingsBus {
     var onKeepScreenOnChanged: OnKeepScreenOnChanged? = null
     var onDarkModeChanged: OnDarkModeChanged? = null
     var onOwnTrackChanged: OnOwnTrackChanged? = null
+    var onHighRateChanged: OnHighRateChanged? = null
     var onResetAll: OnResetAll? = null
+    var onExportKml: OnExportKml? = null
+    var onThemeChanged: OnThemeChanged? = null
 
     @Volatile var liveRecorder: FrameRecorder? = null
     @Volatile var liveBtController: BluetoothController? = null
@@ -49,7 +55,10 @@ object SettingsBus {
     fun keepScreenOnChanged()            = onKeepScreenOnChanged?.call()
     fun darkModeChanged(on: Boolean)     = onDarkModeChanged?.call(on)
     fun ownTrackChanged(on: Boolean)     = onOwnTrackChanged?.call(on)
+    fun highRateChanged(on: Boolean)     = onHighRateChanged?.call(on)
     fun resetAll()                       = onResetAll?.call()
+    fun exportKml(): java.io.File?       = onExportKml?.call()
+    fun themeChanged()                   = onThemeChanged?.call()
 
     fun recorder()        = liveRecorder
     fun btController()    = liveBtController

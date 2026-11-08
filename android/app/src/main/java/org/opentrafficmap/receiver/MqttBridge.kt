@@ -22,6 +22,7 @@ import javax.net.ssl.SSLContext
 class MqttBridge(
     private val nodeId: String,
     private val brokerUri: String = "ssl://cits1.opentrafficmap.org:8883",
+    private val onConnectionChange: ((Boolean) -> Unit)? = null,
 ) {
     private val tag = "MqttBridge"
     private val packetTopic = "its/$nodeId/packet"
@@ -39,6 +40,7 @@ class MqttBridge(
             override fun connectionLost(cause: Throwable?) {
                 Log.w(tag, "connection lost", cause)
                 connected = false
+                onConnectionChange?.invoke(false)
             }
             override fun messageArrived(topic: String, message: MqttMessage) {}
             override fun deliveryComplete(token: org.eclipse.paho.client.mqttv3.IMqttDeliveryToken?) {}
@@ -56,6 +58,7 @@ class MqttBridge(
                 override fun onSuccess(token: org.eclipse.paho.client.mqttv3.IMqttToken?) {
                     Log.i(tag, "connected to $brokerUri")
                     connected = true
+                    onConnectionChange?.invoke(true)
                     try {
                         c.publish(statusTopic, "online".toByteArray(), 1, true)
                     } catch (e: MqttException) { Log.w(tag, "online publish failed", e) }
@@ -63,6 +66,7 @@ class MqttBridge(
                 override fun onFailure(token: org.eclipse.paho.client.mqttv3.IMqttToken?, ex: Throwable?) {
                     Log.w(tag, "connect failed", ex)
                     connected = false
+                    onConnectionChange?.invoke(false)
                 }
             })
             client = c

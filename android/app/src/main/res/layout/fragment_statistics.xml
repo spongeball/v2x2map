@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- 3 stat cards -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <include layout="@layout/item_stat_card" android:id="@+id/cardPackets"
+                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+            <include layout="@layout/item_stat_card" android:id="@+id/cardRate"
+                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:layout_marginStart="8dp"/>
+            <include layout="@layout/item_stat_card" android:id="@+id/cardActive"
+                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
+
+        <!-- By type -->
+        <TextView
+            style="@style/Section.Header"
+            android:text="@string/stats_by_type"/>
+
+        <LinearLayout
+            android:id="@+id/typeRows"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="?attr/colorSurfaceContainer"
+            android:padding="12dp"/>
+
+        <!-- Rate history -->
+        <TextView
+            style="@style/Section.Header"
+            android:text="@string/stats_rate"/>
+
+        <LinearLayout
+            android:id="@+id/rateRangeTabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="?attr/colorSurfaceContainerHigh"
+            android:padding="4dp">
+
+            <TextView android:id="@+id/tabSec" style="@style/RateRangeTab" android:text="@string/stats_range_sec"/>
+            <TextView android:id="@+id/tabHour" style="@style/RateRangeTab" android:text="@string/stats_range_hour"/>
+            <TextView android:id="@+id/tabDay" style="@style/RateRangeTab" android:text="@string/stats_range_day"/>
+            <TextView android:id="@+id/tabWeek" style="@style/RateRangeTab" android:text="@string/stats_range_week"/>
+        </LinearLayout>
+
+        <org.opentrafficmap.receiver.RateChartView
+            android:id="@+id/rateChart"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="8dp"
+            android:background="?attr/colorSurfaceContainer"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="2dp">
+
+            <TextView
+                android:id="@+id/rateSpanLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="10sp"
+                android:alpha="0.6"
+                tools:text="-60s"/>
+
+            <TextView
+                android:id="@+id/rateNowLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:text="0/min now"/>
+        </LinearLayout>
+
+        <!-- Frame log -->
+        <TextView
+            style="@style/Section.Header"
+            android:text="@string/frames_log_header"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:background="?attr/colorSurfaceContainer">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/log"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"/>
+
+            <TextView
+                android:id="@+id/emptyLog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="14dp"
+                android:gravity="center"
+                android:text="@string/empty_log"
+                android:textSize="12sp"/>
+        </FrameLayout>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

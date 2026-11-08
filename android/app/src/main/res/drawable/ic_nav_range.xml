@@ -1,0 +1,16 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Ruler: outlined bar with tick marks -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="1.6"
+        android:pathData="M3,9 L21,9 L21,15 L3,15 Z"/>
+    <path android:fillColor="#FF000000" android:pathData="M6,9h1.2v3h-1.2z"/>
+    <path android:fillColor="#FF000000" android:pathData="M10.4,9h1.2v3h-1.2z"/>
+    <path android:fillColor="#FF000000" android:pathData="M14.8,9h1.2v3h-1.2z"/>
+    <path android:fillColor="#FF000000" android:pathData="M19.2,9h1.2v3h-1.2z"/>
+</vector>

@@ -17,6 +17,7 @@ data class Frame(
     val headingDeg: Double?,
     val speedMps: Double?,
     val spatPhase: SpatTemParser.Phase? = null,
+    val spatRemainingSec: Double? = null, // seconds until spatPhase ends, null if the frame carried no timing
     val secured: Boolean? = null,   // GN Basic Header NH==2 → IEEE 1609.2 signed packet
     val denmCause: DenmParser.Cause? = null,
 ) {

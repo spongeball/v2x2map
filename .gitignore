@@ -47,3 +47,9 @@ blelog.txt
 *.pem
 
 website/
+
+# Reference material pulled from the published Play Store app for feature-gap
+# analysis (decompiled APK + its screenshots) — not ours to redistribute
+android/v2x2map-play-store.apk
+android/v2x2map-play-store/
+update/*.png

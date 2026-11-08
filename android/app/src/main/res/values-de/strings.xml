@@ -1,15 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="nav_map">Karte</string>
+    <string name="nav_radar">Radar</string>
+    <string name="nav_statistics">Statistik</string>
+    <string name="nav_range">Reichweite</string>
     <!-- Connection status -->
-    <string name="status_disconnected">USB: nicht verbunden</string>
-    <string name="status_connected">USB: %1$s</string>
-    <string name="bt_status_disconnected">BT: nicht verbunden</string>
-    <string name="bt_status_connected">BT: %1$s</string>
-    <string name="connect">USB</string>
-    <string name="disconnect">USB ✕</string>
-    <string name="connect_bt">BT</string>
-    <string name="disconnect_bt">BT ✕</string>
-    <string name="mqtt_on">MQTT (aktiv)</string>
+    <string name="pill_disconnected">Nicht verbunden</string>
+    <string name="conn_connected">Verbunden</string>
+    <string name="conn_title">Empfänger verbinden</string>
+    <string name="conn_subtitle">Wähle, wie die App mit dem ITS-G5-Empfänger kommuniziert.</string>
+    <string name="conn_usb">USB</string>
+    <string name="conn_usb_pro">✓ Bevorzugt, verarbeitet auch viele Pakete pro Sekunde</string>
+    <string name="conn_usb_con">– Benötigt ein Kabel, belegt den USB-C-Anschluss</string>
+    <string name="conn_bt">Bluetooth</string>
+    <string name="conn_bt_pro">✓ Kabellos, Telefon bleibt frei beweglich</string>
+    <string name="conn_bt_con">– Geringere Reichweite, kann abbrechen</string>
+
+    <string name="mqtt_connecting">MQTT: verbinde…</string>
+    <string name="mqtt_disconnected">MQTT: getrennt</string>
+
+    <string name="assistant_rest">noch %1$d s</string>
+    <string name="assistant_no_timer">kein Timer</string>
+
+    <string name="intersection_title">Ampel</string>
+    <string name="intersection_no_geometry">Noch keine Fahrspurgeometrie empfangen</string>
+    <string name="intersection_no_spat">Warte auf Signaldaten…</string>
+
+    <string name="stats_packets">Pakete</string>
+    <string name="stats_rate">Rate</string>
+    <string name="stats_active">Aktiv</string>
+    <string name="stats_by_type">Nach Typ</string>
+    <string name="stats_range_sec">60 s</string>
+    <string name="stats_range_hour">1 Std</string>
+    <string name="stats_range_day">24 Std</string>
+    <string name="stats_range_week">7 T</string>
+    <string name="stats_now">%1$d/min jetzt</string>
+
+    <string name="range_export">Als CSV exportieren</string>
+    <string name="range_filter">Filter</string>
+    <string name="range_furthest">Entferntestes Paket · %1$s · %2$s</string>
+    <string name="range_idle">Keine Messung aktiv</string>
+    <string name="range_running">Messung läuft · %1$d Pakete mit Position</string>
+    <string name="range_start">Messung starten</string>
+    <string name="range_stop">Messung stoppen</string>
+    <string name="range_top5">Top 5</string>
+    <string name="range_export_failed">Noch nichts zu exportieren</string>
+    <string name="range_export_done">%1$s gespeichert</string>
+
+    <string name="radar_auto">Automatisch</string>
+    <string name="radar_status_empty">keine Kontakte</string>
+    <string name="radar_status">%1$d Kontakte</string>
+
+    <string name="high_rate_section">Hochfrequenzmodus</string>
+    <string name="high_rate_label">Hochfrequenzmodus (≥1000 Pkt/s)</string>
+    <string name="high_rate_hint">Optimiert für dichte Verkehrsszenarien: gebündelte Kartenaktualisierungen, reduziertes Log, 60-Bucket-Ratenzähler. Marker aktualisieren sich 1×/s, das Log zeigt 1 von 10 Frames.</string>
     <string name="node_id_hint">Node-ID</string>
 
     <!-- Main screen counters -->
@@ -28,11 +72,17 @@
     <!-- Recording -->
     <string name="rec_off">Aufnahme</string>
     <string name="rec_on">Aufnahme stoppen</string>
+    <string name="open_recordings_folder">Aufnahmeordner öffnen</string>
+    <string name="open_folder_failed">Keine Dateimanager-App gefunden</string>
     <string name="rec_section">Frame-Aufnahme</string>
     <string name="rec_status_idle">Keine Aufnahme aktiv</string>
     <string name="rec_status_active">Läuft: %1$s (%2$d Frames)</string>
     <string name="rec_started">Aufnahme gestartet: %1$s</string>
     <string name="rec_stopped">Aufnahme gestoppt (%1$d Frames, %2$s)</string>
+    <string name="auto_record_label">Aufnahme automatisch bei Verbindung starten</string>
+    <string name="export_kml">Karte als KML exportieren</string>
+    <string name="kml_exported">Karte exportiert: %1$s</string>
+    <string name="kml_export_failed">KML-Export fehlgeschlagen</string>
 
     <!-- Map section -->
     <string name="map_section">Karte</string>
@@ -43,6 +93,10 @@
     <string name="map_dl_done">Karten-Download fertig</string>
     <string name="map_dl_progress">Karten-Download: %1$d / %2$d</string>
     <string name="map_dl_unsupported">Diese Tile-Quelle erlaubt keinen Bulk-Download. Panne/zoom durch die Karte, dann füllt sich der Cache von selbst.</string>
+    <string name="marker_size_label">Markergröße</string>
+    <string name="marker_size_small">Klein</string>
+    <string name="marker_size_normal">Normal</string>
+    <string name="marker_size_large">Groß</string>
 
     <!-- Auto-follow -->
     <string name="follow_section">Auto-Follow</string>
@@ -74,9 +128,9 @@
     <string name="ble_ms_hint">BLE ms</string>
 
     <!-- Traffic light -->
-    <string name="spat_light_section">Ampel</string>
-    <string name="spat_light_label">SPATEM-Signalindikator anzeigen</string>
-    <string name="spat_light_hint">Zeigt eine horizontale R/G/G-Ampel wenn eine Ampel-RSU innerhalb von 400 m und ungefähr voraus liegt. Phasenwechsel setzt unverschlüsseltes SPATEM voraus; zeigt Grau bei verschlüsseltem oder unbekanntem Status.</string>
+    <string name="spat_light_section">Ampel-Assistent</string>
+    <string name="spat_light_label">Grüne-Welle-Tempoempfehlung anzeigen</string>
+    <string name="spat_light_hint">Bei Annäherung an eine signalisierte Kreuzung wird eine Geschwindigkeit vorgeschlagen, um Grün zu erreichen — basierend auf dem aktuellen SPATEM-Signalzustand und der Entfernung. Erfordert unverschlüsseltes SPATEM.</string>
 
     <!-- MQTT -->
     <string name="mqtt_section">MQTT</string>
@@ -100,6 +154,18 @@
     <string name="display_section">Anzeige</string>
     <string name="keep_screen_on_label">Display eingeschaltet lassen</string>
     <string name="dark_mode_label">Dunkelmodus erzwingen</string>
+
+    <string name="theme_section">Designfarbe</string>
+    <string name="theme_default">Standard</string>
+    <string name="theme_wallpaper">An Hintergrundbild anpassen</string>
+    <string name="theme_custom">Eigene Farbe</string>
+    <string name="theme_hint">Hintergrundbild-Anpassung und eigene Farbe benötigen Android 12 oder neuer. Auf älteren Versionen bleibt die Standardfarbe erhalten.</string>
+
+    <string name="units_section">Einheiten</string>
+    <string name="units_auto">Automatisch</string>
+    <string name="units_metric">Metrisch (km, km/h)</string>
+    <string name="units_imperial">Imperial (mi, mph)</string>
+    <string name="units_hint">„Automatisch“ richtet sich nach der Geräteregion (Meilen/mph in den USA, UK, …; sonst Kilometer/km-h).</string>
     <string name="reset">Karte &amp; Log leeren</string>
     <string name="toggle_log">Frame-Log ein-/ausblenden</string>
     <string name="log_stats">%1$d Pkts · %2$d/min</string>
@@ -115,8 +181,16 @@
 
     <!-- About -->
     <string name="about_section">Über</string>
-    <string name="about_link">Lizenzen / Über die App</string>
     <string name="github_link">GitHub-Repository</string>
+
+    <string name="settings_row_title">Einstellungen</string>
+    <string name="settings_row_subtitle">Verbindung, Karte, Aufnahme, Design…</string>
+    <string name="about_row_title">Über die App</string>
+    <string name="about_row_subtitle">Version, Credits, Hardware-LEDs</string>
+    <string name="license_title">Lizenz</string>
+    <string name="license_row_subtitle">Eigene Lizenz von V2X2MAP (MIT)</string>
+    <string name="open_source_title">Open-Source-Bibliotheken</string>
+    <string name="open_source_row_subtitle">In dieser App verwendete Drittanbieter-Bibliotheken</string>
     <string name="about_version">Version %1$s (Build %2$d)</string>
     <string name="about_blurb">Open-Source-Empfänger und Live-Map für ITS-G5- (V2X-) Fahrzeug- und Infrastrukturdaten. Hardware: ESP32-C5-Sniffer + USB- und BLE-Bridge.</string>
     <string name="about_licenses_header">Open-Source-Bibliotheken</string>
@@ -202,11 +276,11 @@
 
     <!-- Hardware / LED -->
     <string name="hw_section">Hardware: ESP32-C5 Status-LEDs</string>
-    <string name="hw_intro">Das Waveshare ESP32-C5-WIFI6-KIT hat zwei LEDs, die während des Betriebs sichtbar sind.</string>
-    <string name="hw_led_power_title">Power-LED (weiß/blau, dauerhaft an)</string>
-    <string name="hw_led_power_body">Leuchtet solange das Board USB-Strom bekommt. Falls aus: USB-Kabel und Port prüfen.</string>
-    <string name="hw_led_user_title">User-LED (GPIO 8, firmware-gesteuert)</string>
-    <string name="hw_led_user_body">• Aus – Sniffer läuft normal, wartet auf Frames.\n• Kurzes Aufleuchten beim Start – Bootloader aktiv / App startet.\n• Dauerhaft an – Board im Download-Modus. Passiert wenn das RTS-Signal beim Verbinden gesetzt bleibt. App und Bridge erzwingen RTS=low nach dem Öffnen. Bei Drittsoftware DTR=false, RTS=false manuell setzen.</string>
+    <string name="hw_intro">Das Waveshare ESP32-C5-WIFI6-KIT hat einen WS2812-RGB-Streifen mit 5 LEDs. Beim Start blinkt LED 0 als Selbsttest rot → grün → blau → weiß (je ca. 150 ms), danach gilt das Muster unten.</string>
+    <string name="hw_led_power_title">LED 0 — Status (Ruhefarbe + Aktivitätsblitze)</string>
+    <string name="hw_led_power_body">Ruhefarbe: Türkis = Sniffer aktiv und BLE-Client verbunden, Orange = nur Sniffer, Blau = nur BLE, gedämpftes Weiß = keines von beiden. Blitzt kurz grün bei jedem erfassten V2X-Frame, blau beim Senden über BLE, türkis beim Senden über USB, und pulsiert türkis/rot, wenn ein BLE-Client sich verbindet/trennt.</string>
+    <string name="hw_led_user_title">LEDs 1–4 — Sniffer / Ethernet / MQTT / Aktivität</string>
+    <string name="hw_led_user_body">• LED 1 (Sniffer): rot = gestoppt, grün = läuft.\n• LED 2 (Ethernet, enc28j60/w5500-Varianten): aus = keine Verbindung, blinkend = Link ohne IP, grün = 100 Mbit mit IP, orange = 10 Mbit mit IP.\n• LED 3 (MQTT): aus = kein Ethernet-Link, gelb = verbunden aber kein Broker, grün = verbunden.\n• LED 4: blitzt blau bei einem erfassten V2X-Frame, wenn MQTT verbunden ist, orange wenn nicht — jeder Blitz erlischt nach ca. 50 ms selbst.</string>
     <string name="hw_no_frames_title">Keine Frames obwohl verbunden?</string>
     <string name="hw_no_frames_body">Der Sniffer startet auf Kanal 1 (2,4 GHz). Echter ITS-G5-/V2X-Verkehr liegt bei 5,9 GHz — RSSI −128 dBm und null Frames ist normal bis der Kanal über die UART-Konsole (GPIO 11/12, ohne Probe nicht zugänglich) gewechselt wird.\n\nEin Test-Frame (Payload DEADBEEF…) wird bei jedem Boot gesendet und erscheint als erster Eintrag im Frame-Log — damit lässt sich prüfen ob USB und Firmware funktionieren.</string>
     <string name="hw_reset_title">Board aus der App zurücksetzen</string>

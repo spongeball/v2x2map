@@ -21,6 +21,38 @@ Big thanks to the team behind [**opentrafficmap/its-g5-receiver-firmware**](http
 
 ---
 
+## What's different in this fork
+
+This fork ([spongeball/v2x2map](https://github.com/spongeball/v2x2map), forked from
+[pit711/v2x2map](https://github.com/pit711/v2x2map)) carries a from-scratch rewrite of the
+Android app, closing the feature gap against the published app while keeping the same
+firmware/bridge/web-flasher. Full day-by-day detail lives under [`update/`](update/)
+(`FEATURES.md`, `STRATEGY.md`, `OUT_OF_SCOPE.md`); the short version:
+
+- **New bottom-nav tabs** — Map, Radar (nearby stations by bearing/distance), Statistics
+  (packet/rate/type breakdown + rate history + frame log), Range ("Max Range Mode" + CSV
+  export), and a dedicated Settings tab — replacing the single Map screen.
+- **SPATEM green-wave assistant** — nearest in-range traffic light's phase, countdown, and a
+  live suggested speed to arrive as it turns, with a per-intersection detail sheet.
+- **High Rate Mode** — batched map updates and a sampled (1-in-10) frame log for dense
+  deployments (≥1000 pkt/s), so the UI stays responsive instead of falling behind.
+- **Frame Recording bundle** — PCAP recording now also writes a session CSV, an app debug
+  log, and a periodic KML map snapshot; adds auto-recording-on-connect and an on-demand
+  "Export KML" action.
+- **Theme color** — Default / match-wallpaper (Material You) / custom seed color, via
+  Material's `DynamicColors` API, applied consistently across every screen.
+- **Settings reorganized** — a proper list-item Settings tab; About, License (this
+  project's own MIT text), and Open source libraries are now separate screens instead of
+  one bundled page.
+- **Marker size setting**, units (metric/imperial/auto), own-GPS-track overlay, and a
+  number of theming/contrast bugfixes (frame detail sheet, map FAB icons, radar range tabs)
+  that surfaced once the theme color setting made more than one color scheme possible.
+- [`update/CODEBERG_UPSTREAM.md`](update/CODEBERG_UPSTREAM.md) tracks a separate, not-yet-
+  started effort: contributing the BLE streaming / USB companion-app protocol back to the
+  original Codeberg firmware project.
+
+---
+
 ## What it is
 
 Modern cars and roadside units (RSUs) broadcast standardised safety messages on the dedicated 5.9 GHz V2X band:
@@ -55,15 +87,19 @@ The board supports 5.9 GHz IEEE 802.11p out of the box; the firmware drives it a
 | Feature | Description |
 |---|---|
 | **Live map** | 5 switchable tile layers: Standard, Dark, Satellite, ÖPNV, Humanitarian |
-| **Grouped frame log** | One row per station (MAC); expandable to last 20 frames; shows type icon, speed, distance, 🔒/🔓 secured |
-| **CAM markers** | One marker per vehicle, updated in-place with baked-in heading + speed label |
+| **Grouped frame log** | One row per station (MAC); expandable to last 20 frames; shows type icon, speed, distance, 🔒/🔓 secured; also on the Statistics tab |
+| **CAM markers** | One marker per vehicle, updated in-place with baked-in heading + speed label; adjustable marker size |
+| **SPATEM green-wave assistant** | Nearest in-range traffic light's phase + countdown + a live suggested speed to catch it green |
+| **Radar / Statistics / Range tabs** | Nearby stations by bearing+distance; packet/rate/type breakdown + history; "Max Range Mode" with CSV export |
+| **High Rate Mode** | Batched map updates + sampled (1-in-10) log at ≥1000 pkt/s so the UI keeps up |
 | **Compass mode** | Bearing-up FAB rotates the map to keep your heading at the top |
 | **Own GPS track** | Optional blue polyline traces your route |
 | **Auto-follow** | Map pans with you; zoom stays exactly as you set it |
 | **Geiger-counter mode** | Audio + haptic tick on every frame, distinct beep + buzz on DENM hazard |
 | **BLE + USB auto-reconnect** | Exponential-backoff reconnect on cable pull or BT drop — no user interaction |
 | **Offline maps** | OSMdroid tile cache up to 600 MB |
-| **PCAP recording** | One tap records to standard `.pcap`; open directly in Wireshark (link type 105 = IEEE 802.11) |
+| **Recording bundle** | One tap records PCAP (Wireshark-ready) + session CSV + app debug log + periodic KML map snapshot; auto-record on connect; on-demand KML export |
+| **Theme color** | Default Material 3, match-wallpaper (Material You), or a custom seed color |
 | **Multi-broker MQTT** | One input field per broker, add/remove with + / 🗑; per-type message filter |
 | **Full i18n** | English default, German for German-locale devices — all UI, errors and notifications |
 

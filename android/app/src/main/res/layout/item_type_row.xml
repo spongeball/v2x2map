@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingVertical="4dp">
+
+    <TextView
+        android:id="@+id/typeLabel"
+        android:layout_width="64dp"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        tools:text="CAM"/>
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="8dp"
+        android:background="?attr/colorSurfaceContainerHighest">
+
+        <!-- Full width; resized visually via scaleX (pivotX=0) in code, so it doesn't
+             need a post-layout measurement pass to know the container's pixel width. -->
+        <View
+            android:id="@+id/typeBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/colorPrimary"/>
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/typeCount"
+        android:layout_width="36dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textSize="12sp"
+        tools:text="0"/>
+
+</LinearLayout>

@@ -70,7 +70,7 @@ class MarkerLayer(private val map: MapView, private val context: Context) {
      *  Rotation is baked in so the label stays horizontal on the map. */
     private fun makeCarIcon(speedMps: Double?, headingDeg: Double?): Drawable {
         val dm      = context.resources.displayMetrics
-        val iconPx  = (40 * dm.density).toInt()
+        val iconPx  = (40 * dm.density * Prefs.markerSize(context).scale).toInt()
         val hasSpd  = speedMps != null && speedMps > 0.5
         val textH   = if (hasSpd) (16 * dm.density).toInt() else 0
         val totalH  = iconPx + textH
@@ -93,7 +93,7 @@ class MarkerLayer(private val map: MapView, private val context: Context) {
                 color     = 0xFFFFFFFF.toInt()
                 setShadowLayer(1.5f * dm.density, 0f, 0.5f * dm.density, 0xFF000000.toInt())
             }
-            canvas.drawText("%.0f km/h".format(speedMps!! * 3.6),
+            canvas.drawText(Units.formatSpeedMps(context, speedMps!!),
                              iconPx / 2f, iconPx + 11 * dm.density, paint)
         }
 
@@ -168,6 +168,12 @@ class MarkerLayer(private val map: MapView, private val context: Context) {
         }
         val d = ContextCompat.getDrawable(context, resId)!!.mutate()
         DrawableCompat.setTint(d, t.color)
+        val scale = Prefs.markerSize(context).scale
+        if (scale != 1f) {
+            val w = (d.intrinsicWidth * scale).toInt().coerceAtLeast(1)
+            val h = (d.intrinsicHeight * scale).toInt().coerceAtLeast(1)
+            d.setBounds(0, 0, w, h)
+        }
         return d
     }
 
@@ -181,7 +187,7 @@ class MarkerLayer(private val map: MapView, private val context: Context) {
         val (lat, lon) = f.latLon ?: return "len=${f.len}"
         val sb = StringBuilder()
         sb.append("lat=%.6f  lon=%.6f\n".format(lat, lon))
-        f.speedMps?.takeIf { it > 0.5 }?.let { sb.append("speed=%.1f km/h\n".format(it * 3.6)) }
+        f.speedMps?.takeIf { it > 0.5 }?.let { sb.append("speed=${Units.formatSpeedMps(context, it)}\n") }
         f.headingDeg?.let { sb.append("hdg=%.0f°\n".format(it)) }
         sb.append("len=${f.len}")
         return sb.toString()

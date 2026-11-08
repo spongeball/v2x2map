@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Status card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="?attr/colorSurfaceContainer"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/rangeStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:alpha="0.7"
+                android:text="@string/range_idle"/>
+
+            <TextView
+                android:id="@+id/rangeFurthestValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:textSize="32sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/rangeFurthestDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:alpha="0.7"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRangeToggle"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/range_start"/>
+        </LinearLayout>
+
+        <!-- Filter -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRangeFilter"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="start|center_vertical"
+            android:text="@string/range_filter"/>
+
+        <!-- Top 5 -->
+        <TextView
+            style="@style/Section.Header"
+            android:text="@string/range_top5"/>
+
+        <LinearLayout
+            android:id="@+id/top5Rows"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="?attr/colorSurfaceContainer"
+            android:paddingHorizontal="12dp"/>
+
+        <!-- Export -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRangeExport"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="start|center_vertical"
+            android:text="@string/range_export"/>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

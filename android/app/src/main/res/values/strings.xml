@@ -1,16 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">V2X2MAP</string>
-    <string name="status_disconnected">USB: not connected</string>
-    <string name="status_connected">USB: %1$s</string>
-    <string name="bt_status_disconnected">BT: not connected</string>
-    <string name="bt_status_connected">BT: %1$s</string>
-    <string name="connect">USB</string>
-    <string name="disconnect">USB ✕</string>
-    <string name="connect_bt">BT</string>
-    <string name="disconnect_bt">BT ✕</string>
-    <string name="mqtt_off">MQTT</string>
-    <string name="mqtt_on">MQTT (on)</string>
+    <string name="nav_map">Map</string>
+    <string name="nav_radar">Radar</string>
+    <string name="nav_statistics">Statistics</string>
+    <string name="nav_range">Range</string>
+    <!-- Combined connection pill + picker dialog — verified against the shipped app's strings -->
+    <string name="pill_disconnected">Not connected</string>
+    <string name="conn_connected">Connected</string>
+    <string name="conn_title">Connect receiver</string>
+    <string name="conn_subtitle">Choose how the app talks to the ITS-G5 receiver.</string>
+    <string name="conn_usb">USB</string>
+    <string name="conn_usb_pro">✓ Preferred, can also handle many packets per second</string>
+    <string name="conn_usb_con">– Needs a cable, occupies the USB-C port</string>
+    <string name="conn_bt">Bluetooth</string>
+    <string name="conn_bt_pro">✓ Wireless, phone stays free to move</string>
+    <string name="conn_bt_con">– Shorter range, can drop out</string>
+
+    <string name="mqtt_connecting">MQTT: connecting…</string>
+    <string name="mqtt_disconnected">MQTT: disconnected</string>
+
+    <string name="assistant_rest">%1$d s left</string>
+    <string name="assistant_no_timer">no timer</string>
+
+    <string name="intersection_title">Traffic light</string>
+    <string name="intersection_no_geometry">No lane geometry received yet</string>
+    <string name="intersection_no_spat">Waiting for signal data…</string>
+
+    <!-- Statistics tab — verified against the shipped app's strings -->
+    <string name="stats_packets">Packets</string>
+    <string name="stats_rate">Rate</string>
+    <string name="stats_active">Active</string>
+    <string name="stats_by_type">By type</string>
+    <string name="stats_range_sec">60 s</string>
+    <string name="stats_range_hour">1 h</string>
+    <string name="stats_range_day">24 h</string>
+    <string name="stats_range_week">7 d</string>
+    <string name="stats_now">%1$d/min now</string>
+
+    <!-- Range tab ("Max Range Mode") — verified against the shipped app's strings -->
+    <string name="range_export">Export as CSV</string>
+    <string name="range_filter">Filter</string>
+    <string name="range_furthest">Furthest packet · %1$s · %2$s</string>
+    <string name="range_idle">No measurement running</string>
+    <string name="range_running">Measuring · %1$d packets with position</string>
+    <string name="range_start">Start measuring</string>
+    <string name="range_stop">Stop measuring</string>
+    <string name="range_top5">Top 5</string>
+    <string name="range_export_failed">Nothing to export yet</string>
+    <string name="range_export_done">Saved %1$s</string>
+
+    <!-- Radar tab — verified against the shipped app's strings -->
+    <string name="radar_auto">Auto</string>
+    <string name="radar_status_empty">no contacts</string>
+    <string name="radar_status">%1$d contacts</string>
+
+    <!-- High Rate Mode — verified against the shipped app's strings -->
+    <string name="high_rate_section">High Rate Mode</string>
+    <string name="high_rate_label">High Rate Mode (≥1000 pkt/s)</string>
+    <string name="high_rate_hint">Optimised for dense deployments: batched map updates, sampled log, 60-bucket rate counter. Markers update 1×/s, log shows 1 in 10 frames.</string>
     <string name="mqtt_broker_hint">mqtts://broker:port</string>
     <string name="default_mqtt_broker">mqtts://cits1.opentrafficmap.org:8883</string>
     <string name="node_id_hint">Node ID</string>
@@ -31,11 +79,17 @@
     <!-- Settings -->
     <string name="rec_off">Record</string>
     <string name="rec_on">Stop recording</string>
+    <string name="open_recordings_folder">Open recordings folder</string>
+    <string name="open_folder_failed">No file manager app found</string>
     <string name="rec_section">Frame recording</string>
     <string name="rec_status_idle">No recording active</string>
     <string name="rec_status_active">Active: %1$s (%2$d frames)</string>
     <string name="rec_started">Recording started: %1$s</string>
     <string name="rec_stopped">Recording stopped (%1$d frames, %2$s)</string>
+    <string name="auto_record_label">Start recording automatically on connect</string>
+    <string name="export_kml">Export map as KML</string>
+    <string name="kml_exported">Map exported: %1$s</string>
+    <string name="kml_export_failed">KML export failed</string>
 
     <string name="map_section">Map</string>
     <string name="marker_ttl_label">Objects and paths visible (minutes)</string>
@@ -45,6 +99,10 @@
     <string name="map_dl_done">Map download finished</string>
     <string name="map_dl_progress">Map download: %1$d / %2$d</string>
     <string name="map_dl_unsupported">This tile source does not allow bulk download. Pan and zoom around to fill the cache automatically.</string>
+    <string name="marker_size_label">Marker size</string>
+    <string name="marker_size_small">Small</string>
+    <string name="marker_size_normal">Normal</string>
+    <string name="marker_size_large">Large</string>
 
     <string name="follow_section">Auto-follow</string>
     <string name="follow_label">Centre map automatically while moving</string>
@@ -71,9 +129,9 @@
     <string name="sniff_ms_hint">Sniff ms</string>
     <string name="ble_ms_hint">BLE ms</string>
 
-    <string name="spat_light_section">Traffic light</string>
-    <string name="spat_light_label">Show SPATEM signal indicator</string>
-    <string name="spat_light_hint">Displays a horizontal R/Y/G light when a traffic-light RSU is within 400 m and roughly ahead. Phase colour requires unsecured SPATEM; shows grey when secured or unknown.</string>
+    <string name="spat_light_section">Traffic-light assistant</string>
+    <string name="spat_light_label">Show green-wave speed advice</string>
+    <string name="spat_light_hint">When approaching a signalized intersection ahead, suggests the speed to catch the green — based on live SPATEM phase and distance. Requires unencrypted SPATEM.</string>
 
     <string name="mqtt_section">MQTT</string>
     <string name="mqtt_enable">Enable MQTT</string>
@@ -99,6 +157,18 @@
     <string name="keep_screen_on_label">Keep screen on</string>
     <string name="dark_mode_label">Force dark mode</string>
 
+    <string name="theme_section">Theme color</string>
+    <string name="theme_default">Default</string>
+    <string name="theme_wallpaper">Match wallpaper</string>
+    <string name="theme_custom">Custom color</string>
+    <string name="theme_hint">Wallpaper and custom color require Android 12 or newer. On older versions the app keeps the default color.</string>
+
+    <string name="units_section">Units</string>
+    <string name="units_auto">Auto</string>
+    <string name="units_metric">Metric (km, km/h)</string>
+    <string name="units_imperial">Imperial (mi, mph)</string>
+    <string name="units_hint">Auto follows your device region (miles/mph in the US, UK, …; kilometres/km-h elsewhere).</string>
+
     <!-- Reset -->
     <string name="reset">Reset map &amp; log</string>
 
@@ -118,9 +188,18 @@
     <string name="own_track_hint">Draws a blue line following your movement. Cleared with Reset.</string>
 
     <string name="about_section">About</string>
-    <string name="about_link">Licenses / About this app</string>
     <string name="github_link">GitHub repository</string>
     <string name="github_url">https://github.com/pit711/V2X2MAP</string>
+
+    <string name="settings_row_title">Settings</string>
+    <string name="settings_row_subtitle">Connection, map, recording, theme…</string>
+    <string name="about_row_title">About</string>
+    <string name="about_row_subtitle">Version, credits, hardware LEDs</string>
+    <string name="license_title">License</string>
+    <string name="license_row_subtitle">V2X2MAP\'s own license (MIT)</string>
+    <string name="open_source_title">Open source libraries</string>
+    <string name="open_source_row_subtitle">Third-party libraries used in this app</string>
+    <string name="license_text">"MIT License\n\nCopyright (c) 2026 Peter Holzhauser and contributors\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\nThis repository contains a fork of opentrafficmap/its-g5-receiver-firmware (also under MIT-style terms) — see firmware/main/ for upstream files."</string>
 
     <!-- Legal disclaimer -->
     <string name="legal_title">Legal notice</string>
@@ -201,11 +280,11 @@
 
     <!-- Hardware / LED help -->
     <string name="hw_section">Hardware: ESP32-C5 Status-LEDs</string>
-    <string name="hw_intro">The Waveshare ESP32-C5-WIFI6-KIT has two LEDs visible during operation.</string>
-    <string name="hw_led_power_title">Power-LED (white/blue, always on)</string>
-    <string name="hw_led_power_body">Lit as long as the board receives USB power. If it is off, check the USB cable and port.</string>
-    <string name="hw_led_user_title">User-LED (GPIO 8, controlled by firmware)</string>
-    <string name="hw_led_user_body">• Off – sniffer running normally, waiting for frames.\n• Brief flash at startup – bootloader active / app initialising.\n• Solid on – board stuck in download mode. This happens when the RTS signal asserts at connection time. The app and bridge force RTS=low after opening; if you see this with a third-party serial tool, set DTR=false, RTS=false manually.</string>
+    <string name="hw_intro">The Waveshare ESP32-C5-WIFI6-KIT has a 5-LED WS2812 RGB strip. At boot it flashes LED 0 red → green → blue → white (~150 ms each) as a self-test, then settles into the pattern below.</string>
+    <string name="hw_led_power_title">LED 0 — status (idle colour + activity flashes)</string>
+    <string name="hw_led_power_body">Idle colour: teal = sniffing and a BLE client connected, orange = sniffing only, blue = BLE only, dim white = neither. Briefly flashes green on every captured V2X frame, blue when sending over BLE, cyan when sending over USB, and pulses cyan/red when a BLE client connects/disconnects.</string>
+    <string name="hw_led_user_title">LEDs 1–4 — sniffer / Ethernet / MQTT / activity</string>
+    <string name="hw_led_user_body">• LED 1 (sniffer): red = stopped, green = running.\n• LED 2 (Ethernet, enc28j60/w5500 variants): off = no link, blinking = link up without an IP, solid green = 100 Mbit with IP, solid orange = 10 Mbit with IP.\n• LED 3 (MQTT): off = no Ethernet link, yellow = linked but not connected to a broker, green = connected.\n• LED 4: flashes blue when a V2X frame is captured while MQTT is connected, orange while it is not — each flash clears itself after ~50 ms.</string>
     <string name="hw_no_frames_title">No frames received although connected?</string>
     <string name="hw_no_frames_body">The sniffer starts on channel 1 (2.4 GHz). Real ITS-G5 / V2X traffic is at 5.9 GHz — RSSI −128 dBm and zero frames is normal until the channel is changed via the UART console (GPIO 11/12, not exposed on the breakout header without a probe).\n\nA test frame (payload DEADBEEF…) is sent on every boot and appears as the first entry in the frame log — this confirms USB and firmware are working.</string>
     <string name="hw_reset_title">Resetting the board from the app</string>

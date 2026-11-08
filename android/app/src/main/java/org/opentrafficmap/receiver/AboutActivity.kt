@@ -9,6 +9,7 @@ import org.opentrafficmap.receiver.databinding.ActivityAboutBinding
 
 class AboutActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        AppTheme.applyTo(this)
         super.onCreate(savedInstanceState)
         val binding = ActivityAboutBinding.inflate(layoutInflater)
         setContentView(binding.root)

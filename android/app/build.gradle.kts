@@ -21,7 +21,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "org.opentrafficmap.receiver"
+        applicationId = "com.v2x2map"
         minSdk = 24
         targetSdk = 34
         versionCode = 9
@@ -40,6 +40,12 @@ android {
     }
 
     buildTypes {
+        debug {
+            // Installs alongside the real com.v2x2map Play Store app instead of
+            // colliding with it (same applicationId, different signing key —
+            // see INSTALL_FAILED_VERSION_DOWNGRADE / signature-mismatch notes).
+            applicationIdSuffix = ".dev"
+        }
         release {
             isMinifyEnabled = false
             isShrinkResources = false
@@ -78,6 +84,7 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     // USB CDC/ACM serial driver

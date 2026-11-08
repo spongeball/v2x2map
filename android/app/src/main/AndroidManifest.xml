@@ -73,6 +73,24 @@
         <activity
             android:name=".AboutActivity"
             android:label="@string/about_title"
-            android:parentActivityName=".SettingsActivity"/>
+            android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".LicenseActivity"
+            android:label="@string/license_title"
+            android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".OpenSourceLibrariesActivity"
+            android:label="@string/open_source_title"
+            android:parentActivityName=".MainActivity"/>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
     </application>
 </manifest>

@@ -22,9 +22,22 @@ object Prefs {
     private const val KEY_KEEP_SCREEN_ON  = "keep_screen_on"
     private const val KEY_MAP_LAYER       = "map_layer"
     private const val KEY_MQTT_FILTER     = "mqtt_filter"
+    private const val KEY_RANGE_FILTER    = "range_filter"
     private const val KEY_FORCE_DARK      = "force_dark_mode"
     private const val KEY_OWN_TRACK       = "own_track"
     private const val KEY_COMPASS_MODE    = "compass_mode"
+    private const val KEY_HIGH_RATE       = "high_rate_mode"
+    private const val KEY_UNITS           = "units_mode"
+    private const val KEY_AUTO_RECORDING  = "auto_recording"
+    private const val KEY_MARKER_SIZE     = "marker_size"
+    private const val KEY_THEME_MODE      = "theme_mode"
+    private const val KEY_THEME_COLOR     = "theme_color"
+
+    enum class UnitsMode { AUTO, METRIC, IMPERIAL }
+    enum class MarkerSize(val scale: Float) { SMALL(0.75f), NORMAL(1f), LARGE(1.35f) }
+    /** DEFAULT = static Material 3 baseline. WALLPAPER/CUSTOM need Android 12+ to visually take effect. */
+    enum class ThemeMode { DEFAULT, WALLPAPER, CUSTOM }
+    const val DEFAULT_THEME_COLOR = 0xFF58A6FF.toInt() // matches @color/accent
 
     const val DEFAULT_MARKER_TTL_MIN = 60   // 1 hour
     private val OLD_DEFAULTS = setOf(5, 1440) // values that should be migrated to new default
@@ -116,6 +129,13 @@ object Prefs {
     fun setMqttFilterTypes(ctx: Context, types: Set<String>) =
         prefs(ctx).edit { putStringSet(KEY_MQTT_FILTER, types) }
 
+    fun rangeFilterTypes(ctx: Context): Set<String> =
+        prefs(ctx).getStringSet(KEY_RANGE_FILTER, null)
+            ?: ItsG5Decoder.MsgType.values().map { it.name }.toSet()
+
+    fun setRangeFilterTypes(ctx: Context, types: Set<String>) =
+        prefs(ctx).edit { putStringSet(KEY_RANGE_FILTER, types) }
+
     fun forceDarkMode(ctx: Context): Boolean =
         prefs(ctx).getBoolean(KEY_FORCE_DARK, false)
 
@@ -133,6 +153,45 @@ object Prefs {
 
     fun setCompassMode(ctx: Context, on: Boolean) =
         prefs(ctx).edit { putBoolean(KEY_COMPASS_MODE, on) }
+
+    fun highRateMode(ctx: Context): Boolean =
+        prefs(ctx).getBoolean(KEY_HIGH_RATE, false)
+
+    fun setHighRateMode(ctx: Context, on: Boolean) =
+        prefs(ctx).edit { putBoolean(KEY_HIGH_RATE, on) }
+
+    fun unitsMode(ctx: Context): UnitsMode =
+        try { UnitsMode.valueOf(prefs(ctx).getString(KEY_UNITS, null) ?: UnitsMode.AUTO.name) }
+        catch (_: IllegalArgumentException) { UnitsMode.AUTO }
+
+    fun setUnitsMode(ctx: Context, mode: UnitsMode) =
+        prefs(ctx).edit { putString(KEY_UNITS, mode.name) }
+
+    fun autoRecording(ctx: Context): Boolean =
+        prefs(ctx).getBoolean(KEY_AUTO_RECORDING, false)
+
+    fun setAutoRecording(ctx: Context, on: Boolean) =
+        prefs(ctx).edit { putBoolean(KEY_AUTO_RECORDING, on) }
+
+    fun markerSize(ctx: Context): MarkerSize =
+        try { MarkerSize.valueOf(prefs(ctx).getString(KEY_MARKER_SIZE, null) ?: MarkerSize.NORMAL.name) }
+        catch (_: IllegalArgumentException) { MarkerSize.NORMAL }
+
+    fun setMarkerSize(ctx: Context, size: MarkerSize) =
+        prefs(ctx).edit { putString(KEY_MARKER_SIZE, size.name) }
+
+    fun themeMode(ctx: Context): ThemeMode =
+        try { ThemeMode.valueOf(prefs(ctx).getString(KEY_THEME_MODE, null) ?: ThemeMode.DEFAULT.name) }
+        catch (_: IllegalArgumentException) { ThemeMode.DEFAULT }
+
+    fun setThemeMode(ctx: Context, mode: ThemeMode) =
+        prefs(ctx).edit { putString(KEY_THEME_MODE, mode.name) }
+
+    fun themeColor(ctx: Context): Int =
+        prefs(ctx).getInt(KEY_THEME_COLOR, DEFAULT_THEME_COLOR)
+
+    fun setThemeColor(ctx: Context, color: Int) =
+        prefs(ctx).edit { putInt(KEY_THEME_COLOR, color) }
 
     private fun prefs(ctx: Context) =
         ctx.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

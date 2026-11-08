@@ -74,7 +74,7 @@ object FrameDetailSheet {
         }
 
         if (f.speedMps != null && f.speedMps > 0.0)
-            row(ctx.getString(R.string.detail_label_speed), "%.1f km/h".format(f.speedMps * 3.6))
+            row(ctx.getString(R.string.detail_label_speed), Units.formatSpeedMps(ctx, f.speedMps))
         if (f.headingDeg != null)
             row(ctx.getString(R.string.detail_label_heading),
                 "%.1f°  %s".format(f.headingDeg, compassPoint(f.headingDeg)))

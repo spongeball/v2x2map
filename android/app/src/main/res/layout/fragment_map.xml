@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <org.osmdroid.views.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <!-- Combined USB/BT connection pill -->
+    <LinearLayout
+        android:id="@+id/statusPill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_margin="8dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_pill"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp"
+        android:elevation="4dp"
+        android:clickable="true"
+        android:focusable="true">
+
+        <View
+            android:id="@+id/statusDot"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:background="@drawable/ic_status_dot"/>
+
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textSize="12sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="Not connected"/>
+    </LinearLayout>
+
+    <!-- MQTT pill -->
+    <LinearLayout
+        android:id="@+id/mqttPill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="52dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_pill"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp"
+        android:elevation="4dp"
+        android:visibility="gone">
+
+        <View
+            android:id="@+id/mqttDot"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:background="@drawable/ic_status_dot"/>
+
+        <TextView
+            android:id="@+id/mqttText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textSize="12sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="MQTT: disconnected"/>
+    </LinearLayout>
+
+    <!-- Map controls — fixed vertical stack, top-end, independent of the
+         log sheet's drag position (does NOT move when the sheet expands/collapses). -->
+    <ImageButton
+        android:id="@+id/fabCompass"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="top|end"
+        android:layout_margin="8dp"
+        android:background="@drawable/bg_fab"
+        android:contentDescription="@string/compass_north_up"
+        android:src="@drawable/ic_compass"
+        android:elevation="4dp"/>
+
+    <ImageButton
+        android:id="@+id/fabLayers"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/bg_fab"
+        android:contentDescription="@string/map_layer_title"
+        android:src="@drawable/ic_layers"
+        android:elevation="4dp"/>
+
+    <ImageButton
+        android:id="@+id/fabLocate"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="120dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/bg_fab"
+        android:contentDescription="@string/locate"
+        android:src="@drawable/ic_my_location"
+        android:elevation="4dp"/>
+
+    <!-- Traffic-light assistant card -->
+    <LinearLayout
+        android:id="@+id/assistantCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="96dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_pill"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp"
+        android:elevation="4dp"
+        android:visibility="gone">
+
+        <View
+            android:id="@+id/assistantDot"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:background="@drawable/ic_status_dot"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/assistantSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                tools:text="50 km/h"/>
+
+            <TextView
+                android:id="@+id/assistantSub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="11sp"
+                android:alpha="0.75"
+                tools:text="12 s left"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Draggable frame-log bottom sheet -->
+    <LinearLayout
+        android:id="@+id/logSheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="?attr/colorSurfaceContainer"
+        android:elevation="8dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        app:behavior_peekHeight="56dp"
+        app:behavior_fitToContents="true"
+        app:behavior_hideable="false">
+
+        <View
+            android:id="@+id/logGrabber"
+            android:layout_width="32dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_grabber"/>
+
+        <LinearLayout
+            android:id="@+id/logHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="6dp"
+                android:text="@string/frames_log_header"
+                android:textAllCaps="true"
+                android:textSize="11sp"/>
+
+            <TextView
+                android:id="@+id/logStats"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="4dp"
+                android:textSize="10sp"
+                android:alpha="0.7"
+                tools:text="0 pkts · 0/min"/>
+
+            <ImageView
+                android:id="@+id/logCollapseBtn"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:padding="6dp"
+                android:contentDescription="@string/toggle_log"
+                app:srcCompat="@drawable/ic_expand_more"/>
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/log"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"/>
+
+            <TextView
+                android:id="@+id/emptyLog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="14dp"
+                android:gravity="center"
+                android:text="@string/empty_log"
+                android:textSize="12sp"/>
+        </FrameLayout>
+    </LinearLayout>
+
+    <!-- Speed / bearing overlay -->
+    <TextView
+        android:id="@+id/speedOverlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:background="#BB000000"
+        android:textColor="#FFFFFFFF"
+        android:textSize="13sp"
+        android:fontFamily="monospace"
+        android:padding="6dp"
+        android:layout_margin="8dp"
+        android:elevation="6dp"
+        android:visibility="gone"
+        app:layout_anchor="@id/logSheet"
+        app:layout_anchorGravity="top|start"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

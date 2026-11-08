@@ -23,7 +23,9 @@ bool mqtt_connected;
 
 /* LED 0 (the only WS2812 on the Waveshare devboard) doubles as a status +
  * activity indicator. Idle background reflects sniffer + BLE state; pulses
- * (sniffer-rx, ble-tx, usb-tx) briefly override it for visual feedback. */
+ * (sniffer-rx, ble-tx, usb-tx) briefly override it for visual feedback.
+ * Android's About screen (hw_led_* strings) documents this color scheme for
+ * end users — update both together if it changes. */
 static bool s_ble_connected;
 static struct {
     uint8_t  r, g, b;

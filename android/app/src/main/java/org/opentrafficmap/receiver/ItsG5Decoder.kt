@@ -27,12 +27,6 @@ object ItsG5Decoder {
 
     private const val ETHERTYPE_ITSG5 = 0x8947
 
-    /** Backwards-compat shim — older callers only need EtherType + lat/lon. */
-    fun decode(payload: ByteArray): Pair<Int?, Pair<Double, Double>?> {
-        val full = decodeFull(payload)
-        return full.etherType to full.latLon
-    }
-
     fun decodeFull(p: ByteArray): Decoded {
         val et = sniffEtherType(p)
         if (et == null || et != ETHERTYPE_ITSG5) {
@@ -154,8 +148,8 @@ object ItsG5Decoder {
             val dstPort = ((p[btpOff].toInt() and 0xFF) shl 8) or
                           (p[btpOff + 1].toInt() and 0xFF)
             val msgType = MsgType.fromBtpPort(dstPort)
-            val spatPhase  = if (msgType == MsgType.SPATEM)
-                SpatTemParser.extractPhase(p, btpOff) else null
+            val spatResult = if (msgType == MsgType.SPATEM)
+                SpatTemParser.extract(p, btpOff) else null
             val denmCause  = if (msgType == MsgType.DENM)
                 DenmParser.extractCause(p, btpOff) else null
 
@@ -168,7 +162,8 @@ object ItsG5Decoder {
                 headingDeg  = if (latLon != null && headingRaw != 0xFFFF) heading else null,
                 speedMps    = if (latLon != null) speed else null,
                 btpDstPort  = dstPort,
-                spatPhase   = spatPhase,
+                spatPhase        = spatResult?.phase,
+                spatRemainingSec = spatResult?.remainingSeconds,
                 denmCause   = denmCause,
                 secured     = secured,
             )
@@ -234,6 +229,7 @@ object ItsG5Decoder {
         val speedMps:    Double? = null,
         val btpDstPort:  Int? = null,
         val spatPhase:   SpatTemParser.Phase? = null,
+        val spatRemainingSec: Double? = null,
         val denmCause:   DenmParser.Cause? = null,
         val secured:     Boolean? = null,  // GN Basic Header NH == 2 → IEEE 1609.2
     )
